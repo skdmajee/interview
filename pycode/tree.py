@@ -77,7 +77,7 @@ def printTree(root):
                 output.append(node.val)
                 count -= 1
                 for n in (node.left, node.right):
-                    if n:
+                    if (n and n!='$'):
                         buf.append(n)
                         nextCount += 1
                     else:
@@ -86,6 +86,7 @@ def printTree(root):
                 output.append('$')
             if not count:
                 print output
+                print ('count(%d) nxtcount(%d)' %(count,nextCount))
                 output = []
                 count, nextCount = nextCount, 0
         # print the remaining all empty leaf node part
@@ -123,10 +124,13 @@ def createUnbalancedTree():
     n1, n2 = Tree(5), Tree(20)
     root.left=n1
     root.right=n2
-    n21, n22, n31 = Tree(3), Tree(7), Tree(6)
+    n21, n22 = Tree(3), Tree(7)
     n1.left= n21
     n1.right = n22
-    n22.left= n31
+    n31, n32, n33 = Tree(2), Tree(6), Tree(8)
+    n21.left= n31
+    n22.left = n32
+    n22.right = n33
     return root
 
 
@@ -186,6 +190,36 @@ def bfs_height(root):
 
     return max_depth, min_depth
 
+def findLCA(root, k, path):
+
+    if (root == None):
+        return None
+
+    if( root.val == k):
+        print('(%d) %d :' %(k, root.val))
+        path.append(root.val)
+        return k 
+
+    r1= findLCA(root.left, k, path)
+    if (r1 == None):
+        r1 = findLCA(root.right, k, path)
+
+    if (r1 == k):
+        path.append(root.val)
+        print('(%d) %d :' %(k, root.val))
+        return k
+    
+    return None
+   
+
+
+
+    
+
+
+#
+#  ################################  #
+
 
 
 def treetest():
@@ -199,6 +233,35 @@ def treetest():
     depth,dmin = bfs_height(root)    
     print('Tree height= %d min= %d)'% (depth, dmin))
 
+def LCATree():
+    print('Given two nodes find common ancestor')
+    root = createUnbalancedTree()
+    printTree(root)
+    path8=[]
+    path2=[]
+    
+    node = findLCA(root, 8, path8)
+    node = findLCA(root, 2, path2)
+
+    lcaroot = None
+    l = min(len(path2),len(path8))
+    if (len(path2)!= 0 and len(path8)!=0):
+         while (l):
+            v1, v2=path2.pop(),path8.pop()
+            if (v1 != v2):
+                break
+            else:
+                lcaroot = v1
+            l=l-1
+    else:
+        lcaroot = root.val
+
+    print('lcaroot= %d' %(lcaroot))
+    
+
+    
+
 if __name__ == '__main__':
-    treetest()
+    #treetest()
+    LCATree()
 
