@@ -23,27 +23,30 @@ def main1():
 
     recPermute(sofar, leftout)
 
-def permute(sostr, s):
-    if len(s) == 1:
-        print "STR= %s" % (sostr+s)
+def permute(sostr, rest, output):
+    '''
+    This is a permutation, so for n items, n characters N! is available
+    '''
+    if len(rest) == 0:
+        #print "STR= %s" % (sostr+s)
+        output.append(sostr)
         return
     else:
-        pos = 0
-        for ch in s:
-            leftout = s[:pos] + s[pos+1::]
-            permute(sostr + ch, leftout)
-            pos += 1
+        for i in range(len(rest)):
+            leftout = rest[:i] + rest[i+1::]
+            permute(sostr + rest[i], leftout,output)
     return
 
-def recSubset(sofar, rest, side):
+def recSubset(sofar, rest, side, output):
    
-    print "recSub-->>[%s]: sofar(%s) rest(%s)" %(side, sofar, rest)
+    #print "recSub-->>[%s]: sofar(%s) rest(%s)" %(side, sofar, rest)
     if len(rest) == 0:
-        print "SET:: %s" %(sofar)
+        #print "SET:: %s" %(sofar)
+        output.append(sofar)
     else:
         ' include the char from string'
-        recSubset(sofar + rest[0], rest[1::], "TOP")
-        recSubset(sofar, rest[1::], "BOT")
+        recSubset(sofar + rest[0], rest[1::], "TOP", output)
+        recSubset(sofar, rest[1::], "BOT", output)
         ' exclude the char from string'
 
 
@@ -55,28 +58,43 @@ def removeDuplicate(s):
         if lastch != ch:
             ss += ch
         lastch = ch
-
-    print "fixed string = %s"+ss
     return ss 
+
+#####
+##
 
 def main2():
 
     ss = "ABCADC"
-    ss="ABC"
     s = removeDuplicate(ss)
+    print('REMOVE DUPLICATE:: orig[%s] Clean[%s]'%(ss,s))
+    print('################################')
+    print
+    print
 
-    pos = 0
-    for ch in s:
-        ss = ch
-        leftout = s[:pos] + s[pos+1::]
-        print "..main: ch(%s) leftout(%s)" % (ch, leftout)
-        permute(ss, leftout)
-        pos += 1
+    s="ABC"
+    print('PERMUTE STRING: [%s]'%(s))
+    output=[]
+    for i in range(len(s)):
+        sofar = s[i]
+        leftout = s[:i] + s[i+1:]
+        #print "..main: sofar(%s) leftout(%s)" % (sofar, leftout)
+        permute(sofar, leftout,output)
 
-    print "original : "+s
+    print ' '.join(output)
+    print('################################')
+    print
+    print
+
+    print('all subset of a string[%s]'%s)
     rest = s;
     pattern = ''
-    recSubset(pattern, rest, "TOP")
+    output=[]
+    recSubset(pattern, rest, "TOP", output)
+    print ' '.join(output)
+    print('################################')
+    print
+    print
     
 
 if __name__ == '__main__':
